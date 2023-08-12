@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+html {
+  font-size: 16px;
+}
+
+body {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #121212;
+  color: #eee;
+  font-family: "Lato", sans-serif;
+}
+
+th {
+  white-space: nowrap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .text-input {
+    @apply w-full max-w-xs h-12 pl-2 text-base;
+  }
+
+  .searchbox-input {
+    @apply bg-transparent w-full h-[4rem] pl-4 outline-none text-base border-r border-r-gray-400;
+  }
+
+  .datepickerbg {
+    color-scheme: dark;
+  }
+
+  .form-input {
+    @apply bg-white w-full h-12 pl-2 text-black mt-2;
+  }
+
+  .form-label {
+    @apply mb-2 text-sm;
+  }
+
+  @media print {
+    .onprint {
+      display: block;
+      background: #fff;
+      color: #000;
+    }
+  }
+}
+
+.ownBorder {
+  box-shadow: 0px 0px 3px 1px rgba(143, 126, 126, 0.75) inset;
+  -webkit-box-shadow: 0px 0px 3px 1px rgba(143, 126, 126, 0.75) inset;
+  -moz-box-shadow: 0px 0px 3px 1px rgba(143, 126, 126, 0.75) inset;
+}
