@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleCarFormVisible } from "../../store/dialogSlice";
 import { useEffect, useRef, useState } from "react";
 import { db, storage } from "../../firebase";
+import { toast } from "react-toastify";
+import { carList } from './car-list';
 import {
   addDoc,
   collection,
@@ -19,7 +21,8 @@ import {
 import Button from "../../components/shared/Button";
 import { useMutation } from "react-query";
 import useAuth from "../../hooks/useAuth";
-import { toast } from "react-toastify";
+
+
 // import { cars } from "../user/dummy";
 
 const CarList = () => {
@@ -27,8 +30,8 @@ const CarList = () => {
   // new car creation
   // let isLoading = useRef(false);
   const [brand, setBrand] = useState("");
-  const [people, setPeople] = useState(0);
-  const [bags, setBags] = useState(0);
+  const [people_capacity, setPeople] = useState(0);
+  const [luggage_capacity, setBags] = useState(0);
   const [doors, setDoors] = useState(0);
   const [isAutomatic, setIsAutomatic] = useState(false);
   const [location, setLocation] = useState("");
@@ -39,12 +42,12 @@ const CarList = () => {
   const [cars, setCars] = useState([]);
   const [price_per_hour, setPrice_per_hour] = useState(0);
 
-  const { create } = useAuth();
-  const { mutate, isLoading } = useMutation({
-    mutationFn: async () => create(),
-    // onSuccess: () => window.location.reload(),
-    onError: (err) => toast.error(err.message),
-  });
+  // const { create } = useAuth();
+  // const { mutate, isLoading } = useMutation({
+  //   mutationFn: async () => create(),
+  //   // onSuccess: () => window.location.reload(),
+  //   onError: (err) => toast.error(err.message),
+  // });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -58,8 +61,8 @@ const CarList = () => {
       // Create a new Firestore document
       const docRef = await addDoc(collection(db, "car_list"), {
         brand,
-        people,
-        bags,
+        people_capacity,
+        luggage_capacity,
         doors,
         isAutomatic,
         location,
@@ -78,8 +81,8 @@ const CarList = () => {
 
       let newData = {
         brand,
-        people,
-        bags,
+        people_capacity,
+        luggage_capacity,
         doors,
         isAutomatic,
         location,
@@ -89,19 +92,38 @@ const CarList = () => {
 
       await updateDoc(docRef, newData);
 
-      mutate();
+
       console.log("Document written with ID:", docRef.id);
     } catch (error) {
       console.error("Error adding document:", error);
     }
-
+    toast.success("car addes successfully");
     dispatch(toggleCarFormVisible({ show: !isFormVisible }));
   }
+
+
 
   // new car creation
   // const isFormVisible = useSelector((state) => state.dialogs.isFormVisible);
   const isFormVisible = useSelector((state) => state.dialogs.isCarFormVisible);
 
+  carList.map(el => {
+    bulkAdd(el);
+
+  })
+
+  async function bulkAdd(el) {
+    await addDoc(collection(db, "car_list"), {
+      brand: el.brand,
+      people_capacity: el.people_capacity,
+      luggage_capacity: el.luggage_capacity,
+      doors: el.doors,
+      isAutomatic: el.isAutomatic,
+      location: el.location,
+      price_per_hour: el.price_per_hour,
+      // downloadURL: el.downloadURL,
+    });
+  }
 
   useEffect(() => {
     // console.log(isFormVisible);
